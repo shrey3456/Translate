@@ -1,0 +1,7 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore transformers cache directory (default is ~/.cache/huggingface)
+cache/
+.cache/
