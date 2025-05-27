@@ -2,8 +2,15 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transformers import MarianMTModel, MarianTokenizer
 import torch
+import os
+import uvicorn
 
 app = FastAPI()
+
+# Root route to avoid 404 errors
+@app.get("/")
+def root():
+    return {"message": "Translation API is live ✅"}
 
 class TranslationRequest(BaseModel):
     text: str
@@ -32,3 +39,8 @@ def translate_text(req: TranslationRequest):
         return {"translated_text": translated}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# Use dynamic port from environment (important for Render)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Default 8000 if PORT not set
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
